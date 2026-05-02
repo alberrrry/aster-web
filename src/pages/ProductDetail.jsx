@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { getProduct } from '../api/products'
+import { useCart } from '../context/CartContext'
 
 export default function ProductDetail() {
   const { slug } = useParams()
   const navigate = useNavigate()
   const [product, setProduct] = useState(null)
   const [loading, setLoading] = useState(true)
+  const { add } = useCart()
 
   useEffect(() => {
     getProduct(slug)
@@ -29,11 +31,12 @@ export default function ProductDetail() {
       </p>
       <p style={{ lineHeight: 1.6 }}>{product.description}</p>
       <button
-        disabled={product.stock === 0}
-        style={{ marginTop: 24, padding: '12px 32px', fontSize: 16 }}
-      >
-        Add to cart
-      </button>
+  onClick={() => add(product.id)}
+  disabled={product.stock === 0}
+  style={{ marginTop: 24, padding: '12px 32px', fontSize: 16, cursor: 'pointer' }}
+>
+  {product.stock === 0 ? 'Out of stock' : 'Add to cart'}
+</button>
     </div>
   )
 }
