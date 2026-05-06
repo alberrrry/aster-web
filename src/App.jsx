@@ -9,6 +9,8 @@ import Home from './pages/Home'
 import Products from './pages/Products'
 import ProductDetail from './pages/ProductDetail'
 import Checkout from './pages/Checkout'
+import OrderConfirmation from './pages/OrderConfirmation'
+import Orders from './pages/Orders'
 
 function App() {
   return (
@@ -25,6 +27,8 @@ function App() {
             <Route path="/products/:slug" element={<ProductDetail />} />
             <Route path="/checkout" element={<Checkout />} />
             <Route path="*" element={<Navigate to="/login" />} />
+            <Route path="/orders" element={<Orders />} />
+            <Route path="/orders/:id" element={<OrderConfirmation />} />
           </Routes>
         </CartProvider>
       </AuthProvider>
