@@ -13,12 +13,17 @@ export default function Products() {
     getCategories().then(res => setCategories(res.data))
   }, [])
 
-  useEffect(() => {
-    setLoading(true)
-    getProducts(categorySlug ? { category: categorySlug } : {})
-      .then(res => setProducts(res.data.data))
-      .finally(() => setLoading(false))
-  }, [categorySlug])
+  const [search, setSearch] = useState(searchParams.get('search') || '')
+
+useEffect(() => {
+  setLoading(true)
+  getProducts({
+    ...(categorySlug ? { category: categorySlug } : {}),
+    ...(search ? { search } : {}),
+  })
+    .then(res => setProducts(res.data.data))
+    .finally(() => setLoading(false))
+}, [categorySlug, search])
 
   const currentCategory = categories.find(c => c.slug === categorySlug)
 

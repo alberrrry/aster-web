@@ -9,3 +9,4 @@ export const getProducts = (params) => {
 
 export const getProduct = (slug) => api.get(`/products/${slug}`)
 export const getCategories = () => api.get('/products/categories')
+export const getFeatured = () => api.get('/products/featured')
