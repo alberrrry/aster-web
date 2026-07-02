@@ -18,7 +18,6 @@ export default function Home() {
     getFeatured().then(res => setFeatured(res.data))
   }, [])
 
-  // Debounced search
   useEffect(() => {
     if (!search.trim()) {
       setSearchResults([])
@@ -49,51 +48,27 @@ export default function Home() {
   return (
     <div>
       {/* Hero */}
-      <div style={{
-        padding: '88px 64px 80px',
-        borderBottom: '0.5px solid var(--border)',
-        maxWidth: 1200,
-        margin: '0 auto',
-      }}>
-        <p style={{
-          fontSize: 11,
-          letterSpacing: '.14em',
-          textTransform: 'uppercase',
-          color: 'var(--accent)',
-          marginBottom: 24,
-        }}>
+      <div className="max-w-screen-xl mx-auto px-16 py-20 border-b border-gray-100">
+        <p className="text-[11px] tracking-[.14em] uppercase text-[#8b5e6d] mb-6">
           New collection — 2025
         </p>
-        <h1 style={{
-          fontSize: 60,
-          fontWeight: 300,
-          lineHeight: 1.1,
-          letterSpacing: '-.02em',
-          marginBottom: 28,
-          maxWidth: 600,
-        }}>
+        <h1 className="text-6xl font-light leading-[1.1] tracking-tight mb-7 max-w-2xl">
           Dressed for the{' '}
-          <span style={{ fontWeight: 500, fontStyle: 'italic' }}>everyday</span>
+          <span className="font-medium italic">everyday</span>
           {' '}and beyond.
         </h1>
-        <p style={{
-          fontSize: 14,
-          color: 'var(--text-muted)',
-          lineHeight: 1.8,
-          maxWidth: 420,
-          marginBottom: 40,
-        }}>
+        <p className="text-sm text-gray-400 leading-relaxed max-w-md mb-10">
           Thoughtfully made pieces for modern living. Quality that lasts, style that endures.
         </p>
-        <div style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
+        <div className="flex items-center gap-4">
           <Link to="/products">
-            <button className="btn-primary" style={{ padding: '13px 32px', fontSize: 13 }}>
+            <button className="bg-[#8b5e6d] text-white text-sm font-medium px-8 py-3 rounded-md hover:opacity-90 transition-opacity border-none cursor-pointer">
               Shop now
             </button>
           </Link>
           <Link
             to="/products"
-            style={{ fontSize: 13, color: 'var(--text-muted)', textDecoration: 'underline', textUnderlineOffset: 3 }}
+            className="text-sm text-gray-400 underline underline-offset-4 hover:text-gray-600 transition-colors"
           >
             View all products →
           </Link>
@@ -101,102 +76,88 @@ export default function Home() {
       </div>
 
       {/* Search */}
-      <div style={{
-        borderBottom: '0.5px solid var(--border)',
-        padding: '20px 64px',
-        position: 'relative',
-        maxWidth: 1200,
-        margin: '0 auto',
-      }}>
-        <form onSubmit={handleSearchSubmit} style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-          <div style={{ flex: 1, position: 'relative' }}>
+      <div className="border-b border-gray-100">
+        <div className="max-w-screen-xl mx-auto px-16 py-5">
+          <form onSubmit={handleSearchSubmit} className="relative">
             <input
               value={search}
               onChange={e => setSearch(e.target.value)}
               onBlur={() => setTimeout(() => setShowResults(false), 200)}
               onFocus={() => searchResults.length && setShowResults(true)}
               placeholder="Search for products..."
-              style={{ width: '100%', background: 'var(--surface)', border: '0.5px solid var(--border)', padding: '11px 16px', borderRadius: 'var(--radius-md)', fontSize: 13 }}
+              className="w-full bg-gray-50 border border-gray-200 rounded-md px-4 py-3 pr-24 text-sm outline-none focus:border-[#8b5e6d] transition-colors"
             />
+            <button
+              type="submit"
+              className="absolute right-2 top-1/2 -translate-y-1/2 bg-[#8b5e6d] text-white text-xs font-medium px-4 py-2 rounded-md border-none cursor-pointer hover:opacity-90 transition-opacity"
+            >
+              Search
+            </button>
 
-            {/* Dropdown results */}
+            {/* Dropdown */}
             {showResults && (
-              <div style={{
-                position: 'absolute',
-                top: 'calc(100% + 8px)',
-                left: 0,
-                right: 0,
-                background: '#fff',
-                border: '0.5px solid var(--border)',
-                borderRadius: 'var(--radius-lg)',
-                boxShadow: '0 8px 32px rgba(0,0,0,0.08)',
-                zIndex: 200,
-                overflow: 'hidden',
-              }}>
+              <div className="absolute top-[calc(100%+8px)] left-0 right-0 bg-white border border-gray-100 rounded-xl shadow-md z-50 overflow-hidden">
                 {searching ? (
-                  <p style={{ padding: '16px 20px', fontSize: 13, color: 'var(--text-muted)' }}>Searching...</p>
+                  <p className="px-5 py-4 text-sm text-gray-400">Searching...</p>
                 ) : searchResults.length === 0 ? (
-                  <p style={{ padding: '16px 20px', fontSize: 13, color: 'var(--text-muted)' }}>No results found</p>
+                  <p className="px-5 py-4 text-sm text-gray-400">No results found</p>
                 ) : (
-                  searchResults.slice(0, 5).map(product => (
-                    <Link
-                      key={product.id}
-                      to={`/products/${product.slug}`}
-                      onClick={() => { setShowResults(false); setSearch('') }}
-                      style={{ display: 'flex', gap: 14, alignItems: 'center', padding: '12px 20px', borderBottom: '0.5px solid var(--border)', textDecoration: 'none', color: 'inherit' }}
+                  <>
+                    {searchResults.slice(0, 5).map(product => (
+                      <Link
+                        key={product.id}
+                        to={`/products/${product.slug}`}
+                        onClick={() => { setShowResults(false); setSearch('') }}
+                        className="flex gap-4 items-center px-5 py-3 border-b border-gray-50 hover:bg-gray-50 transition-colors no-underline text-inherit"
+                      >
+                        <div className="w-9 h-12 rounded overflow-hidden bg-gray-100 shrink-0">
+                          {product.images?.[0] && (
+                            <img
+                              src={`http://localhost:8000/storage/${product.images[0]}`}
+                              alt={product.name}
+                              className="w-full h-full object-cover"
+                            />
+                          )}
+                        </div>
+                        <div className="flex-1">
+                          <p className="text-sm font-medium mb-0.5">{product.name}</p>
+                          <p className="text-xs text-gray-400">{product.category?.name}</p>
+                        </div>
+                        <p className="text-sm text-[#8b5e6d] font-medium">${product.price}</p>
+                      </Link>
+                    ))}
+                    <button
+                      onClick={handleSearchSubmit}
+                      className="w-full px-5 py-3 text-xs text-[#8b5e6d] text-left bg-transparent border-none cursor-pointer hover:bg-gray-50 transition-colors"
                     >
-                      <div style={{ width: 36, height: 48, borderRadius: 4, overflow: 'hidden', background: 'var(--surface)', flexShrink: 0 }}>
-                        {product.images?.[0] && (
-                          <img src={`http://localhost:8000/storage/${product.images[0]}`} alt={product.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                        )}
-                      </div>
-                      <div style={{ flex: 1 }}>
-                        <p style={{ fontSize: 13, fontWeight: 500, marginBottom: 2 }}>{product.name}</p>
-                        <p style={{ fontSize: 12, color: 'var(--text-muted)' }}>{product.category?.name}</p>
-                      </div>
-                      <p style={{ fontSize: 13, color: 'var(--accent)', fontWeight: 500 }}>${product.price}</p>
-                    </Link>
-                  ))
-                )}
-                {searchResults.length > 0 && (
-                  <button
-                    onClick={handleSearchSubmit}
-                    style={{ width: '100%', padding: '12px 20px', background: 'none', border: 'none', fontSize: 12, color: 'var(--accent)', cursor: 'pointer', textAlign: 'left' }}
-                  >
-                    View all results for "{search}" →
-                  </button>
+                      View all results for "{search}" →
+                    </button>
+                  </>
                 )}
               </div>
             )}
-          </div>
-        </form>
+          </form>
+        </div>
       </div>
 
       {/* Categories */}
-      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '56px 64px 48px' }}>
-        <p style={{ fontSize: 11, letterSpacing: '.1em', textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: 24 }}>
+      <div className="max-w-screen-xl mx-auto px-16 py-14">
+        <p className="text-[11px] tracking-[.1em] uppercase text-gray-400 mb-6">
           Shop by category
         </p>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12 }}>
+        <div className="grid grid-cols-4 gap-3">
           {categories.map(cat => (
-            <Link key={cat.id} to={`/products?category=${cat.slug}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-              <div
-                style={{
-                  background: 'var(--surface)',
-                  borderRadius: 'var(--radius-lg)',
-                  padding: '24px 20px',
-                  border: '0.5px solid var(--border)',
-                  cursor: 'pointer',
-                  transition: 'border-color 0.2s',
-                }}
-                onMouseEnter={e => e.currentTarget.style.borderColor = 'var(--accent)'}
-                onMouseLeave={e => e.currentTarget.style.borderColor = 'var(--border)'}
-              >
-                <p style={{ fontSize: 14, fontWeight: 500, marginBottom: 4 }}>{cat.name}</p>
-                <p style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 16 }}>
+            <Link
+              key={cat.id}
+              to={`/products?category=${cat.slug}`}
+              className="no-underline text-inherit"
+            >
+              <div className="bg-gray-50 rounded-xl p-6 border border-gray-100 hover:border-[#8b5e6d] transition-colors cursor-pointer">
+                <p className="text-sm font-medium mb-1">{cat.name}</p>
+                <p className="text-xs text-gray-400 mb-4">
                   {cat.products_count} {cat.products_count === 1 ? 'item' : 'items'}
                 </p>
-                <p style={{ fontSize: 12, color: 'var(--accent)' }}>Explore →</p>
+                <p className="text-xs text-[#8b5e6d]">Explore →</p>
               </div>
             </Link>
           ))}
@@ -204,40 +165,42 @@ export default function Home() {
       </div>
 
       {/* Featured products */}
-      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 64px 80px' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
-          <p style={{ fontSize: 11, letterSpacing: '.1em', textTransform: 'uppercase', color: 'var(--text-muted)' }}>
+      <div className="max-w-screen-xl mx-auto px-16 pb-20">
+        <div className="flex justify-between items-center mb-6">
+          <p className="text-[11px] tracking-[.1em] uppercase text-gray-400">
             Featured products
           </p>
-          <Link to="/products" style={{ fontSize: 12, color: 'var(--accent)', textDecoration: 'underline', textUnderlineOffset: 3 }}>
+          <Link
+            to="/products"
+            className="text-xs text-[#8b5e6d] underline underline-offset-4 hover:opacity-75 transition-opacity"
+          >
             View all →
           </Link>
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '32px 20px' }}>
+        <div className="grid grid-cols-4 gap-x-5 gap-y-8">
           {featured.map(product => (
             <div key={product.id}>
-              <Link to={`/products/${product.slug}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-                <div style={{ width: '100%', aspectRatio: '3/4', background: 'var(--surface)', borderRadius: 'var(--radius-lg)', marginBottom: 14, overflow: 'hidden' }}>
+              <Link to={`/products/${product.slug}`} className="no-underline text-inherit">
+                <div className="w-full aspect-[3/4] bg-gray-50 rounded-xl mb-4 overflow-hidden group">
                   {product.images?.[0] ? (
                     <img
                       src={`http://localhost:8000/storage/${product.images[0]}`}
                       alt={product.name}
-                      style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     />
                   ) : (
-                    <div style={{ width: '100%', height: '100%', background: 'var(--surface)' }} />
+                    <div className="w-full h-full bg-gray-100" />
                   )}
                 </div>
-                <p style={{ fontSize: 11, color: 'var(--text-muted)', letterSpacing: '.06em', textTransform: 'uppercase', marginBottom: 4 }}>
+                <p className="text-[11px] text-gray-400 tracking-[.06em] uppercase mb-1">
                   {product.category?.name}
                 </p>
-                <p style={{ fontSize: 14, fontWeight: 500, marginBottom: 4 }}>{product.name}</p>
-                <p style={{ fontSize: 14, color: 'var(--accent)', marginBottom: 12 }}>${product.price}</p>
+                <p className="text-sm font-medium mb-1">{product.name}</p>
+                <p className="text-sm text-[#8b5e6d] mb-3">${product.price}</p>
               </Link>
               <button
                 onClick={() => add(product.id)}
-                className="btn-secondary"
-                style={{ width: '100%', padding: '9px', fontSize: 12 }}
+                className="w-full py-2.5 text-xs border border-gray-200 rounded-md hover:border-[#8b5e6d] hover:text-[#8b5e6d] transition-colors bg-white cursor-pointer"
               >
                 Add to cart
               </button>
@@ -247,9 +210,9 @@ export default function Home() {
       </div>
 
       {/* Footer strip */}
-      <div style={{ borderTop: '0.5px solid var(--border)', padding: '32px 64px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <span style={{ fontSize: 14, fontWeight: 500, letterSpacing: '.08em', color: 'var(--accent)' }}>ASTER</span>
-        <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>© 2025 Aster. All rights reserved.</span>
+      <div className="border-t border-gray-100 px-16 py-8 flex justify-between items-center max-w-screen-xl mx-auto">
+        <span className="text-sm font-medium tracking-widest text-[#8b5e6d]">ASTER</span>
+        <span className="text-xs text-gray-400">© 2025 Aster. All rights reserved.</span>
       </div>
     </div>
   )

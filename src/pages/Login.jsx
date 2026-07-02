@@ -25,43 +25,28 @@ export default function Login() {
   }
 
   return (
-    <div style={{
-      minHeight: 'calc(100vh - 60px)',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      padding: '40px 20px',
-    }}>
-      <div style={{ width: '100%', maxWidth: 400 }}>
+    <div className="min-h-[calc(100vh-60px)] flex items-center justify-center px-5 py-16">
+      <div className="w-full max-w-sm">
 
         {/* Header */}
-        <div style={{ textAlign: 'center', marginBottom: 40 }}>
-          <h1 style={{ fontSize: 13, letterSpacing: '.12em', color: 'var(--accent)', marginBottom: 12 }}>ASTER</h1>
-          <h2 style={{ fontSize: 24, fontWeight: 500 }}>Welcome back</h2>
-          <p style={{ color: 'var(--text-muted)', fontSize: 14, marginTop: 6 }}>Sign in to your account</p>
+        <div className="text-center mb-10">
+          <p className="text-xs tracking-[.12em] text-[#8b5e6d] uppercase mb-3">ASTER</p>
+          <h1 className="text-2xl font-medium mb-2">Welcome back</h1>
+          <p className="text-sm text-gray-400">Sign in to your account</p>
         </div>
 
         {/* Error */}
         {error && (
-          <div style={{
-            background: 'var(--accent-subtle)',
-            border: '0.5px solid var(--accent-border)',
-            borderRadius: 'var(--radius-md)',
-            padding: '10px 14px',
-            fontSize: 13,
-            color: '#c97a7a',
-            marginBottom: 20,
-            textAlign: 'center',
-          }}>
+          <div className="bg-[#8b5e6d]/8 border border-[#8b5e6d]/25 rounded-md px-4 py-3 text-sm text-[#8b5e6d] text-center mb-5">
             {error}
           </div>
         )}
 
         {/* Form */}
-        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div>
-            <label style={{ fontSize: 12, color: 'var(--text-muted)', letterSpacing: '.04em', display: 'block', marginBottom: 6 }}>
-              EMAIL
+            <label className="block text-[11px] text-gray-400 tracking-[.04em] uppercase mb-2">
+              Email
             </label>
             <input
               type="email"
@@ -69,12 +54,13 @@ export default function Login() {
               onChange={e => setEmail(e.target.value)}
               placeholder="you@example.com"
               required
+              className="w-full border border-gray-200 rounded-md px-4 py-3 text-sm outline-none focus:border-[#8b5e6d] transition-colors"
             />
           </div>
 
           <div>
-            <label style={{ fontSize: 12, color: 'var(--text-muted)', letterSpacing: '.04em', display: 'block', marginBottom: 6 }}>
-              PASSWORD
+            <label className="block text-[11px] text-gray-400 tracking-[.04em] uppercase mb-2">
+              Password
             </label>
             <input
               type="password"
@@ -82,23 +68,25 @@ export default function Login() {
               onChange={e => setPassword(e.target.value)}
               placeholder="••••••••"
               required
+              className="w-full border border-gray-200 rounded-md px-4 py-3 text-sm outline-none focus:border-[#8b5e6d] transition-colors"
             />
           </div>
 
           <button
             type="submit"
-            className="btn-primary"
             disabled={loading}
-            style={{ width: '100%', marginTop: 8, padding: '13px' }}
+            className="w-full bg-[#8b5e6d] text-white rounded-md py-3 text-sm font-medium mt-2 hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer"
           >
             {loading ? 'Signing in...' : 'Sign in'}
           </button>
         </form>
 
         {/* Footer */}
-        <p style={{ textAlign: 'center', fontSize: 13, color: 'var(--text-muted)', marginTop: 24 }}>
+        <p className="text-center text-sm text-gray-400 mt-6">
           Don't have an account?{' '}
-          <Link to="/register" style={{ color: 'var(--accent)' }}>Create one</Link>
+          <Link to="/register" className="text-[#8b5e6d] hover:underline">
+            Create one
+          </Link>
         </p>
       </div>
     </div>

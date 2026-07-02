@@ -48,7 +48,7 @@ export default function ProductDetail() {
   }
 
   if (loading) return (
-    <div style={{ padding: '80px 40px', textAlign: 'center', color: 'var(--text-muted)' }}>
+    <div className="flex items-center justify-center py-32 text-sm text-gray-400">
       Loading...
     </div>
   )
@@ -58,67 +58,53 @@ export default function ProductDetail() {
   const images = product.images || []
 
   return (
-    <div style={{ maxWidth: 1200, margin: '0 auto', padding: '48px 40px' }}>
+    <div className="max-w-screen-xl mx-auto px-10 py-12">
 
       {/* Breadcrumb */}
-      <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 40, fontSize: 12, color: 'var(--text-muted)' }}>
-        <span style={{ cursor: 'pointer' }} onClick={() => navigate('/products')}>Shop</span>
+      <div className="flex items-center gap-2 text-xs text-gray-400 mb-10">
+        <span className="cursor-pointer hover:text-[#8b5e6d]" onClick={() => navigate('/products')}>Shop</span>
         <span>·</span>
-        <span style={{ cursor: 'pointer' }} onClick={() => navigate(`/products?category=${product.category?.slug}`)}>
+        <span className="cursor-pointer hover:text-[#8b5e6d]" onClick={() => navigate(`/products?category=${product.category?.slug}`)}>
           {product.category?.name}
         </span>
         <span>·</span>
-        <span style={{ color: 'var(--text-primary)' }}>{product.name}</span>
+        <span className="text-gray-700">{product.name}</span>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 64 }}>
+      <div className="grid grid-cols-2 gap-16">
 
         {/* Left — Images */}
         <div>
-          {/* Main image */}
-          <div style={{
-            width: '100%',
-            aspectRatio: '3/4',
-            background: 'var(--surface)',
-            borderRadius: 'var(--radius-lg)',
-            overflow: 'hidden',
-            marginBottom: 12,
-          }}>
+          <div className="w-full aspect-[3/4] bg-gray-50 rounded-2xl overflow-hidden mb-3">
             {images[selectedImage] ? (
               <img
                 src={`http://localhost:8000/storage/${images[selectedImage]}`}
                 alt={product.name}
-                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                className="w-full h-full object-cover"
               />
             ) : (
-              <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <span style={{ color: 'var(--text-muted)', fontSize: 13 }}>No image</span>
+              <div className="w-full h-full flex items-center justify-center text-sm text-gray-300">
+                No image
               </div>
             )}
           </div>
 
-          {/* Thumbnails */}
           {images.length > 1 && (
-            <div style={{ display: 'flex', gap: 8 }}>
+            <div className="flex gap-2">
               {images.map((img, i) => (
                 <div
                   key={i}
                   onClick={() => setSelectedImage(i)}
-                  style={{
-                    width: 72,
-                    height: 96,
-                    borderRadius: 8,
-                    overflow: 'hidden',
-                    cursor: 'pointer',
-                    border: selectedImage === i ? '1.5px solid var(--accent)' : '1.5px solid transparent',
-                    opacity: selectedImage === i ? 1 : 0.6,
-                    transition: 'all 0.2s',
-                  }}
+                  className={`w-16 h-20 rounded-lg overflow-hidden cursor-pointer transition-all ${
+                    selectedImage === i
+                      ? 'ring-[1.5px] ring-[#8b5e6d] opacity-100'
+                      : 'opacity-50 hover:opacity-75'
+                  }`}
                 >
                   <img
                     src={`http://localhost:8000/storage/${img}`}
                     alt=""
-                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                    className="w-full h-full object-cover"
                   />
                 </div>
               ))}
@@ -127,45 +113,38 @@ export default function ProductDetail() {
         </div>
 
         {/* Right — Info */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 28 }}>
+        <div className="flex flex-col gap-7">
 
           {/* Header */}
           <div>
-            <p style={{ fontSize: 11, color: 'var(--text-muted)', letterSpacing: '.08em', textTransform: 'uppercase', marginBottom: 10 }}>
+            <p className="text-[11px] text-gray-400 tracking-[.08em] uppercase mb-3">
               {product.category?.name}
             </p>
-            <h1 style={{ fontSize: 26, fontWeight: 500, marginBottom: 12 }}>{product.name}</h1>
-            <p style={{ fontSize: 22, color: 'var(--accent)', fontWeight: 500 }}>${product.price}</p>
+            <h1 className="text-2xl font-medium mb-3">{product.name}</h1>
+            <p className="text-xl text-[#8b5e6d] font-medium">${product.price}</p>
           </div>
 
           {/* Description */}
           {product.description && (
-            <p style={{ fontSize: 14, color: 'var(--text-muted)', lineHeight: 1.8 }}>
-              {product.description}
-            </p>
+            <p className="text-sm text-gray-400 leading-relaxed">{product.description}</p>
           )}
 
           {/* Color selector */}
           {product.colors?.length > 0 && (
             <div>
-              <p style={{ fontSize: 11, letterSpacing: '.08em', textTransform: 'uppercase', marginBottom: 12, color: 'var(--text-muted)' }}>
-                Color — <span style={{ color: 'var(--text-primary)' }}>{selectedColor}</span>
+              <p className="text-[11px] tracking-[.08em] uppercase mb-3 text-gray-400">
+                Color — <span className="text-gray-800">{selectedColor}</span>
               </p>
-              <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+              <div className="flex gap-2 flex-wrap">
                 {product.colors.map(color => (
                   <button
                     key={color}
                     onClick={() => setSelectedColor(color)}
-                    style={{
-                      padding: '6px 16px',
-                      borderRadius: 'var(--radius-md)',
-                      border: selectedColor === color ? '1.5px solid var(--text-primary)' : '0.5px solid var(--border)',
-                      background: selectedColor === color ? 'var(--text-primary)' : '#fff',
-                      color: selectedColor === color ? '#fff' : 'var(--text-primary)',
-                      fontSize: 13,
-                      cursor: 'pointer',
-                      transition: 'all 0.15s',
-                    }}
+                    className={`px-4 py-2 rounded-md text-sm border transition-all cursor-pointer ${
+                      selectedColor === color
+                        ? 'border-gray-800 bg-gray-800 text-white'
+                        : 'border-gray-200 bg-white text-gray-800 hover:border-gray-400'
+                    }`}
                   >
                     {color}
                   </button>
@@ -177,25 +156,19 @@ export default function ProductDetail() {
           {/* Size selector */}
           {product.sizes?.length > 0 && (
             <div>
-              <p style={{ fontSize: 11, letterSpacing: '.08em', textTransform: 'uppercase', marginBottom: 12, color: 'var(--text-muted)' }}>
-                Size — <span style={{ color: 'var(--text-primary)' }}>{selectedSize}</span>
+              <p className="text-[11px] tracking-[.08em] uppercase mb-3 text-gray-400">
+                Size — <span className="text-gray-800">{selectedSize}</span>
               </p>
-              <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+              <div className="flex gap-2 flex-wrap">
                 {product.sizes.map(size => (
                   <button
                     key={size}
                     onClick={() => setSelectedSize(size)}
-                    style={{
-                      width: 48,
-                      height: 48,
-                      borderRadius: 'var(--radius-md)',
-                      border: selectedSize === size ? '1.5px solid var(--text-primary)' : '0.5px solid var(--border)',
-                      background: selectedSize === size ? 'var(--text-primary)' : '#fff',
-                      color: selectedSize === size ? '#fff' : 'var(--text-primary)',
-                      fontSize: 13,
-                      cursor: 'pointer',
-                      transition: 'all 0.15s',
-                    }}
+                    className={`w-12 h-12 rounded-md text-sm border transition-all cursor-pointer ${
+                      selectedSize === size
+                        ? 'border-gray-800 bg-gray-800 text-white'
+                        : 'border-gray-200 bg-white text-gray-800 hover:border-gray-400'
+                    }`}
                   >
                     {size}
                   </button>
@@ -206,61 +179,52 @@ export default function ProductDetail() {
 
           {/* Quantity */}
           <div>
-            <p style={{ fontSize: 11, letterSpacing: '.08em', textTransform: 'uppercase', marginBottom: 12, color: 'var(--text-muted)' }}>
-              Quantity
-            </p>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 0, border: '0.5px solid var(--border)', borderRadius: 'var(--radius-md)', width: 'fit-content' }}>
+            <p className="text-[11px] tracking-[.08em] uppercase mb-3 text-gray-400">Quantity</p>
+            <div className="flex items-center border border-gray-200 rounded-md w-fit">
               <button
                 onClick={() => setQuantity(q => Math.max(1, q - 1))}
-                style={{ width: 44, height: 44, background: 'none', border: 'none', fontSize: 18, cursor: 'pointer', color: 'var(--text-primary)' }}
+                className="w-11 h-11 flex items-center justify-center text-lg text-gray-500 hover:text-gray-800 bg-transparent border-none cursor-pointer"
               >
                 −
               </button>
-              <span style={{ width: 40, textAlign: 'center', fontSize: 14 }}>{quantity}</span>
+              <span className="w-10 text-center text-sm">{quantity}</span>
               <button
                 onClick={() => setQuantity(q => Math.min(product.stock, q + 1))}
-                style={{ width: 44, height: 44, background: 'none', border: 'none', fontSize: 18, cursor: 'pointer', color: 'var(--text-primary)' }}
+                className="w-11 h-11 flex items-center justify-center text-lg text-gray-500 hover:text-gray-800 bg-transparent border-none cursor-pointer"
               >
                 +
               </button>
             </div>
           </div>
 
-          {/* Stock status */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <div style={{
-              width: 7, height: 7, borderRadius: '50%',
-              background: product.stock > 0 ? '#8aab8a' : '#ccc'
-            }} />
-            <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>
+          {/* Stock */}
+          <div className="flex items-center gap-2">
+            <div className={`w-2 h-2 rounded-full ${product.stock > 0 ? 'bg-green-400' : 'bg-gray-300'}`} />
+            <span className="text-sm text-gray-400">
               {product.stock > 10 ? 'In stock' : product.stock > 0 ? `Only ${product.stock} left` : 'Out of stock'}
             </span>
           </div>
 
           {/* Error */}
-          {error && (
-            <p style={{ fontSize: 13, color: '#c97a7a' }}>{error}</p>
-          )}
+          {error && <p className="text-sm text-[#8b5e6d]">{error}</p>}
 
           {/* Add to cart */}
           <button
             onClick={handleAddToCart}
             disabled={product.stock === 0 || adding}
-            className="btn-primary"
-            style={{
-              width: '100%',
-              padding: '15px',
-              fontSize: 14,
-              background: added ? '#8aab8a' : undefined,
-              transition: 'background 0.3s',
-            }}
+            className={`w-full py-4 rounded-md text-sm font-medium text-white transition-all cursor-pointer border-none ${
+              added
+                ? 'bg-green-500'
+                : product.stock === 0
+                ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                : 'bg-[#8b5e6d] hover:opacity-90'
+            }`}
           >
             {adding ? 'Adding...' : added ? 'Added to cart ✓' : product.stock === 0 ? 'Out of stock' : 'Add to cart'}
           </button>
 
-          {/* SKU */}
           {product.sku && (
-            <p style={{ fontSize: 11, color: 'var(--text-muted)' }}>SKU: {product.sku}</p>
+            <p className="text-[11px] text-gray-300">SKU: {product.sku}</p>
           )}
         </div>
       </div>

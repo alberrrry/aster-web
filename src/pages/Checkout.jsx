@@ -7,11 +7,10 @@ import { Elements, CardElement, useStripe, useElements } from '@stripe/react-str
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY)
 
-// Field component defined outside — receives value and onChange explicitly (your fix, kept)
 const Field = ({ label, name, value, onChange, placeholder, required, half }) => (
-  <div style={{ gridColumn: half ? 'span 1' : 'span 2' }}>
-    <label style={{ fontSize: 11, color: 'var(--text-muted)', letterSpacing: '.06em', textTransform: 'uppercase', display: 'block', marginBottom: 6 }}>
-      {label} {required && <span style={{ color: 'var(--accent)' }}>*</span>}
+  <div className={half ? 'col-span-1' : 'col-span-2'}>
+    <label className="block text-[11px] text-gray-400 tracking-[.06em] uppercase mb-2">
+      {label} {required && <span className="text-[#8b5e6d]">*</span>}
     </label>
     <input
       name={name}
@@ -19,11 +18,11 @@ const Field = ({ label, name, value, onChange, placeholder, required, half }) =>
       onChange={onChange}
       placeholder={placeholder}
       required={required}
+      className="w-full border border-gray-200 rounded-md px-4 py-3 text-sm outline-none focus:border-[#8b5e6d] transition-colors bg-white"
     />
   </div>
 )
 
-// Payment form — separate component so Stripe hooks work correctly
 function PaymentForm({ form, onSuccess, onError }) {
   const stripe = useStripe()
   const elements = useElements()
@@ -63,15 +62,10 @@ function PaymentForm({ form, onSuccess, onError }) {
 
   return (
     <form onSubmit={handleSubmit}>
-      <p style={{ fontSize: 11, fontWeight: 500, letterSpacing: '.1em', textTransform: 'uppercase', marginBottom: 16, color: 'var(--text-muted)' }}>
+      <p className="text-[11px] font-medium tracking-[.1em] uppercase text-gray-400 mb-4">
         Payment details
       </p>
-      <div style={{
-        border: '0.5px solid var(--border)',
-        borderRadius: 'var(--radius-md)',
-        padding: '14px',
-        marginBottom: 20,
-      }}>
+      <div className="border border-gray-200 rounded-md p-4 mb-5">
         <CardElement options={{
           style: {
             base: {
@@ -86,19 +80,17 @@ function PaymentForm({ form, onSuccess, onError }) {
       <button
         type="submit"
         disabled={loading || !stripe}
-        className="btn-primary"
-        style={{ width: '100%', padding: '14px', fontSize: 14 }}
+        className="w-full bg-[#8b5e6d] text-white text-sm font-medium py-4 rounded-md hover:opacity-90 transition-opacity disabled:opacity-50 border-none cursor-pointer"
       >
         {loading ? 'Processing...' : `Pay $${(Number(total) + shipping).toFixed(2)}`}
       </button>
-      <p style={{ fontSize: 11, color: 'var(--text-muted)', textAlign: 'center', marginTop: 12 }}>
+      <p className="text-[11px] text-gray-400 text-center mt-3">
         Secured by Stripe · Test mode
       </p>
     </form>
   )
 }
 
-// Main checkout page
 export default function Checkout() {
   const { items, total } = useCart()
   const navigate = useNavigate()
@@ -129,38 +121,36 @@ export default function Checkout() {
     navigate(`/orders/${order.id}?success=true`)
   }
 
-  const handleError = (msg) => {
-    setError(msg)
-  }
+  const handleError = (msg) => setError(msg)
 
   return (
-    <div style={{ maxWidth: 1100, margin: '0 auto', padding: '48px 40px' }}>
+    <div className="max-w-5xl mx-auto px-10 py-12">
 
       {/* Header */}
-      <div style={{ marginBottom: 48 }}>
-        <h1 style={{ fontSize: 24, fontWeight: 500, marginBottom: 12 }}>Checkout</h1>
-        <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-          <span style={{ fontSize: 13, color: step === 1 ? 'var(--accent)' : 'var(--text-muted)', fontWeight: step === 1 ? 500 : 400 }}>
+      <div className="mb-12">
+        <h1 className="text-2xl font-medium mb-3">Checkout</h1>
+        <div className="flex items-center gap-2">
+          <span className={`text-sm ${step === 1 ? 'text-[#8b5e6d] font-medium' : 'text-gray-400'}`}>
             1. Shipping
           </span>
-          <span style={{ color: 'var(--border)' }}>→</span>
-          <span style={{ fontSize: 13, color: step === 2 ? 'var(--accent)' : 'var(--text-muted)', fontWeight: step === 2 ? 500 : 400 }}>
+          <span className="text-gray-200">→</span>
+          <span className={`text-sm ${step === 2 ? 'text-[#8b5e6d] font-medium' : 'text-gray-400'}`}>
             2. Payment
           </span>
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 400px', gap: 64, alignItems: 'start' }}>
+      <div className="grid grid-cols-[1fr_380px] gap-16 items-start">
 
-        {/* Left — form */}
+        {/* Left */}
         <div>
           {step === 1 && (
             <>
-              <p style={{ fontSize: 11, fontWeight: 500, letterSpacing: '.1em', textTransform: 'uppercase', marginBottom: 24, color: 'var(--text-muted)' }}>
+              <p className="text-[11px] font-medium tracking-[.1em] uppercase text-gray-400 mb-6">
                 Shipping information
               </p>
               <form onSubmit={handleShippingSubmit}>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+                <div className="grid grid-cols-2 gap-4 mb-4">
                   <Field label="Full name" name="full_name" value={form.full_name} onChange={handleChange} placeholder="Your name" required half />
                   <Field label="Phone" name="phone" value={form.phone} onChange={handleChange} placeholder="+1 234 567 8900" half />
                   <Field label="Address" name="address_line1" value={form.address_line1} onChange={handleChange} placeholder="123 Main Street" required />
@@ -170,8 +160,8 @@ export default function Checkout() {
                   <Field label="Postal code" name="postal_code" value={form.postal_code} onChange={handleChange} placeholder="10001" required half />
                   <Field label="Country" name="country" value={form.country} onChange={handleChange} placeholder="United States" required half />
                 </div>
-                <div style={{ marginTop: 16, marginBottom: 24 }}>
-                  <label style={{ fontSize: 11, color: 'var(--text-muted)', letterSpacing: '.06em', textTransform: 'uppercase', display: 'block', marginBottom: 6 }}>
+                <div className="mb-6">
+                  <label className="block text-[11px] text-gray-400 tracking-[.06em] uppercase mb-2">
                     Order notes
                   </label>
                   <textarea
@@ -180,10 +170,13 @@ export default function Checkout() {
                     onChange={handleChange}
                     placeholder="Any special instructions..."
                     rows={3}
-                    style={{ resize: 'vertical' }}
+                    className="w-full border border-gray-200 rounded-md px-4 py-3 text-sm outline-none focus:border-[#8b5e6d] transition-colors resize-y bg-white"
                   />
                 </div>
-                <button type="submit" className="btn-primary" style={{ width: '100%', padding: '14px', fontSize: 14 }}>
+                <button
+                  type="submit"
+                  className="w-full bg-[#8b5e6d] text-white text-sm font-medium py-4 rounded-md hover:opacity-90 transition-opacity border-none cursor-pointer"
+                >
                   Continue to payment
                 </button>
               </form>
@@ -191,77 +184,74 @@ export default function Checkout() {
           )}
 
           {step === 2 && (
-  <>
-    {/* Shipping summary */}
-    <div style={{ background: 'var(--surface)', borderRadius: 'var(--radius-lg)', padding: '16px 20px', marginBottom: 28, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-      <div>
-        <p style={{ fontSize: 11, color: 'var(--text-muted)', letterSpacing: '.06em', textTransform: 'uppercase', marginBottom: 4 }}>Shipping to</p>
-        <p style={{ fontSize: 13, fontWeight: 500 }}>{form.full_name}</p>
-        <p style={{ fontSize: 13, color: 'var(--text-muted)' }}>{form.address_line1}, {form.city}, {form.country}</p>
-      </div>
-      <button onClick={() => setStep(1)} style={{ fontSize: 12, color: 'var(--accent)', background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'underline' }}>
-        Edit
-      </button>
-    </div>
+            <>
+              {/* Shipping summary */}
+              <div className="bg-gray-50 rounded-xl px-5 py-4 mb-7 flex justify-between items-center">
+                <div>
+                  <p className="text-[11px] text-gray-400 uppercase tracking-[.06em] mb-1">Shipping to</p>
+                  <p className="text-sm font-medium">{form.full_name}</p>
+                  <p className="text-sm text-gray-400">{form.address_line1}, {form.city}, {form.country}</p>
+                </div>
+                <button
+                  onClick={() => setStep(1)}
+                  className="text-xs text-[#8b5e6d] underline bg-transparent border-none cursor-pointer"
+                >
+                  Edit
+                </button>
+              </div>
 
-    {error && (
-      <div style={{ marginBottom: 20, padding: '10px 14px', background: 'var(--accent-subtle)', border: '0.5px solid var(--accent-border)', borderRadius: 'var(--radius-md)', fontSize: 13, color: 'var(--accent)' }}>
-        {error}
-      </div>
-    )}
+              {error && (
+                <div className="mb-5 px-4 py-3 bg-[#8b5e6d]/8 border border-[#8b5e6d]/25 rounded-md text-sm text-[#8b5e6d]">
+                  {error}
+                </div>
+              )}
 
-    <Elements stripe={stripePromise}>
-      <PaymentForm form={form} onSuccess={handleSuccess} onError={handleError} />
-    </Elements>
-  </>
-)}
+              <Elements stripe={stripePromise}>
+                <PaymentForm form={form} onSuccess={handleSuccess} onError={handleError} />
+              </Elements>
+            </>
+          )}
         </div>
 
         {/* Right — Order summary */}
-        <div style={{
-          background: 'var(--surface)',
-          borderRadius: 'var(--radius-lg)',
-          padding: '28px 24px',
-          position: 'sticky',
-          top: 100,
-        }}>
-          <p style={{ fontSize: 11, fontWeight: 500, letterSpacing: '.1em', textTransform: 'uppercase', marginBottom: 20, color: 'var(--text-muted)' }}>
+        <div className="bg-gray-50 rounded-2xl p-7 sticky top-24">
+          <p className="text-[11px] font-medium tracking-[.1em] uppercase text-gray-400 mb-5">
             Order summary
           </p>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 16, marginBottom: 24 }}>
+          <div className="flex flex-col gap-4 mb-6">
             {items.map(item => (
-              <div key={item.id} style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-                <div style={{ width: 52, height: 68, borderRadius: 6, overflow: 'hidden', background: '#e8e8e8', flexShrink: 0 }}>
+              <div key={item.id} className="flex gap-3 items-center">
+                <div className="w-14 h-[72px] rounded-md overflow-hidden bg-gray-200 shrink-0">
                   {item.product.images?.[0] && (
                     <img
                       src={`http://localhost:8000/storage/${item.product.images[0]}`}
                       alt={item.product.name}
-                      style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                      className="w-full h-full object-cover"
                     />
                   )}
                 </div>
-                <div style={{ flex: 1 }}>
-                  <p style={{ fontSize: 13, fontWeight: 500, marginBottom: 2 }}>{item.product.name}</p>
-                  <p style={{ fontSize: 12, color: 'var(--text-muted)' }}>Qty {item.quantity}</p>
+                <div className="flex-1">
+                  <p className="text-sm font-medium mb-0.5">{item.product.name}</p>
+                  <p className="text-xs text-gray-400">Qty {item.quantity}</p>
                 </div>
-                <p style={{ fontSize: 13, fontWeight: 500 }}>${(item.product.price * item.quantity).toFixed(2)}</p>
+                <p className="text-sm font-medium">${(item.product.price * item.quantity).toFixed(2)}</p>
               </div>
             ))}
           </div>
 
-          <div style={{ borderTop: '0.5px solid var(--border)', paddingTop: 20, display: 'flex', flexDirection: 'column', gap: 10 }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>Subtotal</span>
-              <span style={{ fontSize: 13 }}>${Number(total).toFixed(2)}</span>
+          <div className="border-t border-gray-200 pt-5 flex flex-col gap-2.5">
+            <div className="flex justify-between">
+              <span className="text-sm text-gray-400">Subtotal</span>
+              <span className="text-sm">${Number(total).toFixed(2)}</span>
             </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>Shipping</span>
-              <span style={{ fontSize: 13 }}>${shipping.toFixed(2)}</span>
+            <div className="flex justify-between">
+              <span className="text-sm text-gray-400">Shipping</span>
+              <span className="text-sm">${shipping.toFixed(2)}</span>
             </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', paddingTop: 12, borderTop: '0.5px solid var(--border)', marginTop: 4 }}>
-              <span style={{ fontSize: 15, fontWeight: 500 }}>Total</span>
-              <span style={{ fontSize: 15, fontWeight: 500 }}>${(Number(total) + shipping).toFixed(2)}</span>
+            <div className="flex justify-between pt-3 border-t border-gray-200 mt-1">
+              <span className="text-[15px] font-medium">Total</span>
+              <span className="text-[15px] font-medium">${(Number(total) + shipping).toFixed(2)}</span>
             </div>
           </div>
         </div>

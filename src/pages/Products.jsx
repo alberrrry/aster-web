@@ -5,6 +5,7 @@ import { getProducts, getCategories } from '../api/products'
 export default function Products() {
   const [searchParams] = useSearchParams()
   const categorySlug = searchParams.get('category')
+  const [search, setSearch] = useState(searchParams.get('search') || '')
   const [products, setProducts] = useState([])
   const [categories, setCategories] = useState([])
   const [loading, setLoading] = useState(true)
@@ -13,82 +14,72 @@ export default function Products() {
     getCategories().then(res => setCategories(res.data))
   }, [])
 
-  const [search, setSearch] = useState(searchParams.get('search') || '')
-
-useEffect(() => {
-  setLoading(true)
-  getProducts({
-    ...(categorySlug ? { category: categorySlug } : {}),
-    ...(search ? { search } : {}),
-  })
-    .then(res => setProducts(res.data.data))
-    .finally(() => setLoading(false))
-}, [categorySlug, search])
+  useEffect(() => {
+    setLoading(true)
+    getProducts({
+      ...(categorySlug ? { category: categorySlug } : {}),
+      ...(search ? { search } : {}),
+    })
+      .then(res => setProducts(res.data.data))
+      .finally(() => setLoading(false))
+  }, [categorySlug, search])
 
   const currentCategory = categories.find(c => c.slug === categorySlug)
+  const parentCategory = currentCategory?.parent_id
+    ? categories.find(c => c.id === currentCategory.parent_id)
+    : null
 
   return (
-    <div style={{ maxWidth: 1200, margin: '0 auto', padding: '40px 40px' }}>
+    <div className="max-w-screen-xl mx-auto px-10 py-12">
 
       {/* Page header */}
-      <div style={{ marginBottom: 40, borderBottom: '0.5px solid var(--border)', paddingBottom: 24 }}>
-        <p style={{ fontSize: 11, color: 'var(--text-muted)', letterSpacing: '.08em', textTransform: 'uppercase', marginBottom: 8 }}>
-          {currentCategory?.parent_id ? categories.find(c => c.id === currentCategory.parent_id)?.name + ' · ' : ''}
+      <div className="mb-10 pb-6 border-b border-gray-100">
+        <p className="text-[11px] text-gray-400 tracking-[.08em] uppercase mb-2">
+          {parentCategory ? `${parentCategory.name} · ` : ''}
           {currentCategory ? currentCategory.name : 'All products'}
         </p>
-        <h1 style={{ fontSize: 28, fontWeight: 500 }}>
+        <h1 className="text-3xl font-medium mb-2">
           {currentCategory ? currentCategory.name : 'Shop'}
         </h1>
-        <p style={{ color: 'var(--text-muted)', fontSize: 13, marginTop: 6 }}>
+        <p className="text-sm text-gray-400">
           {products.length} {products.length === 1 ? 'item' : 'items'}
         </p>
       </div>
 
       {/* Grid */}
       {loading ? (
-        <p style={{ color: 'var(--text-muted)' }}>Loading...</p>
+        <p className="text-gray-400 text-sm">Loading...</p>
       ) : products.length === 0 ? (
-        <p style={{ color: 'var(--text-muted)' }}>No products found in this category.</p>
+        <p className="text-gray-400 text-sm">No products found.</p>
       ) : (
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(4, 1fr)',
-          gap: '40px 24px',
-        }}>
+        <div className="grid grid-cols-4 gap-x-5 gap-y-10">
           {products.map(product => (
             <Link
               key={product.id}
               to={`/products/${product.slug}`}
-              style={{ textDecoration: 'none', color: 'inherit' }}
+              className="group no-underline text-inherit"
             >
               {/* Image */}
-              <div style={{
-                width: '100%',
-                aspectRatio: '3/4',
-                background: 'var(--surface)',
-                borderRadius: 'var(--radius-lg)',
-                marginBottom: 14,
-                overflow: 'hidden',
-              }}>
+              <div className="w-full aspect-[3/4] bg-gray-50 rounded-xl mb-4 overflow-hidden">
                 {product.images?.[0] ? (
                   <img
                     src={`http://localhost:8000/storage/${product.images[0]}`}
                     alt={product.name}
-                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   />
                 ) : (
-                  <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>No image</span>
+                  <div className="w-full h-full flex items-center justify-center">
+                    <span className="text-xs text-gray-300">No image</span>
                   </div>
                 )}
               </div>
 
               {/* Info */}
-              <p style={{ fontSize: 11, color: 'var(--text-muted)', letterSpacing: '.06em', textTransform: 'uppercase', marginBottom: 4 }}>
+              <p className="text-[11px] text-gray-400 tracking-[.06em] uppercase mb-1">
                 {product.category?.name}
               </p>
-              <p style={{ fontSize: 14, fontWeight: 500, marginBottom: 4 }}>{product.name}</p>
-              <p style={{ fontSize: 14, color: 'var(--accent)' }}>${product.price}</p>
+              <p className="text-sm font-medium mb-1">{product.name}</p>
+              <p className="text-sm text-[#8b5e6d]">${product.price}</p>
             </Link>
           ))}
         </div>
