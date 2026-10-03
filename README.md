@@ -1,16 +1,49 @@
-# React + Vite
+# Aster
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A minimal, full-stack e-commerce app with category browsing, product variants, a persistent cart, and Stripe checkout.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- Category navigation with hover dropdowns and a product grid
+- Product pages with variant selection (e.g. size, color)
+- Debounced search with live results dropdown
+- Database-persisted cart in a slide-out drawer
+- Two-step checkout (shipping, then payment) with Stripe
+- Order confirmation and order history
+- Token-based auth with Laravel Sanctum
 
-## React Compiler
+## Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+| Layer | Tools |
+|---|---|
+| Frontend | React (Vite), Tailwind CSS, Axios |
+| Backend | Laravel 11, Sanctum, Filament v3 admin |
+| Database | PostgreSQL |
+| Payments | Stripe |
 
-## Expanding the ESLint configuration
+## Architecture
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+```
+React SPA (aster-web)  ──REST + Sanctum token──▶  Laravel API (aster-api)  ──▶  PostgreSQL
+                                                          └──▶ Stripe
+```
+
+Auth state lives in a React `AuthContext`. The cart and orders are stored server-side, so they persist across sessions and devices.
+
+## Getting Started
+
+**Prerequisites:** Node.js [version] and a running instance of [aster-api](https://github.com/[username]/aster-api).
+
+```bash
+git clone https://github.com/[username]/aster-web.git
+cd aster-web
+npm install
+cp .env.example .env   # set the API URL and Stripe publishable key
+npm run dev
+```
+
+| Variable | Description |
+|---|---|
+| `VITE_API_URL` | Base URL of aster-api (e.g. `http://localhost:8000/api`) |
+| `VITE_STRIPE_PUBLISHABLE_KEY` | Stripe publishable (test) key |
+
